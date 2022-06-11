@@ -22,15 +22,15 @@ const getBarrierConfig = () => {
 export const loadPanicHistory = () => async (dispatch) => {
   try {
     await csrf();
-    await getBarrierConfig();
+    getBarrierConfig();
 
-    dispatch(loadPanicHistoryInProgress());
+    await dispatch(loadPanicHistoryInProgress(true));
 
     const { data } = await apiClient.get(`api/panics/history`);
 
-    await console.log(data.data);
+    await dispatch(loadPanicHistorySuccess(data.data.panics));
 
-    dispatch(loadPanicHistorySuccess(data.data.panics));
+    await dispatch(loadPanicHistoryInProgress(false));
   } catch (e) {
     dispatch(loadPanicHistoryFailure());
     dispatch(displayAlert(e));

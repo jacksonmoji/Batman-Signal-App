@@ -1,17 +1,11 @@
-// import { Link as RouterLink } from "react-router-dom";
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { getUser } from "../redux/selectors";
-import { connect } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
+import React from "react";
 
-// @mui
 import { styled } from "@mui/material/styles";
-import { Container, Typography } from "@mui/material";
+import { Container, Button } from "@mui/material";
 
-// components
 import PanicForm from "../components/panicForm";
 import Header from "../components/header";
-// ----------------------------------------------------------------------
 
 const SectionStyle = styled("div")(({ theme }) => ({
   maxWidth: 300,
@@ -23,30 +17,23 @@ const SectionStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-// ----------------------------------------------------------------------
-
 const Panic = ({ user }) => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate("/login", { replace: true });
-    }
-  }, [user, navigate]);
-
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center" }}>
       <SectionStyle>
         <Header />
-        <Typography>Enter Panic Information</Typography>
         <PanicForm />
+        <Button
+          component={RouterLink}
+          to="/home"
+          variant="contained"
+          color="secondary"
+        >
+          Home
+        </Button>
       </SectionStyle>
     </Container>
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: getUser(state),
-});
-
-export default connect(mapStateToProps)(Panic);
+export default Panic;

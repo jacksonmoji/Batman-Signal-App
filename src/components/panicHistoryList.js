@@ -9,7 +9,12 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import { getPanicHistory } from "../redux/selectors";
+import Progress from "../components/loader";
+
+import {
+  getPanicHistory,
+  getPanicHistoryLoadingStatus,
+} from "../redux/selectors";
 import { loadPanicHistory } from "../redux/api/panic";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -32,49 +37,60 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const PanicHistoryList = ({ panicHistory, startLoadPanicHistory }) => {
+const PanicHistoryList = ({
+  panicHistory,
+  startLoadPanicHistory,
+  panicHistoryLoading,
+}) => {
   useEffect(() => {
-    if (panicHistory.length === 0) {
-      startLoadPanicHistory();
-    }
-  }, [panicHistory, startLoadPanicHistory]);
+    startLoadPanicHistory();
+  }, [startLoadPanicHistory]);
 
-  return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} a dense table>
-        <TableHead>
-          <StyledTableRow>
-            <StyledTableCell>Panic Type</StyledTableCell>
-            <StyledTableCell align="right">Details</StyledTableCell>
-            <StyledTableCell align="right">Latitude</StyledTableCell>
-            <StyledTableCell align="right">Longitude</StyledTableCell>
-            <StyledTableCell align="right">Date</StyledTableCell>
-          </StyledTableRow>
-        </TableHead>
-        <TableBody>
-          {panicHistory.map((row) => (
-            <StyledTableRow
-              key={row.id}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <StyledTableCell component="th" scope="row">
-                {row.panic_type}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.details}</StyledTableCell>
-              <StyledTableCell align="right">{row.latitude}</StyledTableCell>
-              <StyledTableCell align="right">{row.longitude}</StyledTableCell>
-              <StyledTableCell align="right">{row.created_at}</StyledTableCell>
+  if (panicHistoryLoading) {
+    return <Progress loading={panicHistoryLoading} type="linear" />;
+  } else if (panicHistory.length < 1) {
+    return <div>No history available</div>;
+  } else {
+    return (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} a dense table>
+          <TableHead>
+            <StyledTableRow>
+              <StyledTableCell>Panic Type</StyledTableCell>
+              <StyledTableCell align="right">Details</StyledTableCell>
+              <StyledTableCell align="right">Latitude</StyledTableCell>
+              <StyledTableCell align="right">Longitude</StyledTableCell>
+              <StyledTableCell align="right">Date</StyledTableCell>
             </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-  );
+          </TableHead>
+          <TableBody>
+            {panicHistory.map((row) => (
+              <StyledTableRow
+                key={row.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <StyledTableCell component="th" scope="row">
+                  {row.panic_type}
+                </StyledTableCell>
+                <StyledTableCell align="right">{row.details}</StyledTableCell>
+                <StyledTableCell align="right">{row.latitude}</StyledTableCell>
+                <StyledTableCell align="right">{row.longitude}</StyledTableCell>
+                <StyledTableCell align="right">
+                  {row.created_at}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
 };
 
 const mapStateToProps = (state) => {
   return {
     panicHistory: getPanicHistory(state),
+    panicHistoryLoading: getPanicHistoryLoadingStatus(state),
   };
 };
 

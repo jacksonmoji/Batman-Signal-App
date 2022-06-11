@@ -10,6 +10,7 @@ const initialState = {
   panic_history: [],
   panic_information: {},
   panic_in_progress: false,
+  panic_history_loading: false,
 };
 
 export const panicReducers = (state = initialState, action) => {
@@ -36,13 +37,16 @@ export const panicReducers = (state = initialState, action) => {
       const { panics } = payload;
       return {
         ...state,
-        panic_history: state.panic_history.concat(panics),
+        panic_history: panics,
       };
     }
-    case LOAD_PANIC_HISTORY_IN_PROGRESS:
+    case LOAD_PANIC_HISTORY_IN_PROGRESS: {
+      const { status } = payload;
       return {
         ...state,
+        panic_history_loading: status,
       };
+    }
     case LOAD_PANIC_HISTORY_FAILURE:
       return {
         ...state,

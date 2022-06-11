@@ -1,17 +1,19 @@
-/* eslint-disable no-unused-expressions */
 import React, { useState, useEffect, useReducer } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import { connect } from "react-redux";
 import {
   getPanicInformation,
   getUser,
   getPanicInProgress,
 } from "../redux/selectors";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+import {
+  TextField,
+  FormControl,
+  Typography,
+  Box,
+  Button,
+  Stack,
+} from "@mui/material/";
+
 import { sendPanicRequest, cancelPanicRequest } from "../redux/api/panic";
 
 const formReducer = (state, event) => {
@@ -79,11 +81,7 @@ const PanicForm = ({
   if (panicInProgress) {
     return (
       <>
-        <Button
-          onClick={handlePanicCancel}
-          variant="contained"
-          color="secondary"
-        >
+        <Button onClick={handlePanicCancel} variant="contained" color="primary">
           Cancel Panic
         </Button>
         Panic in progress...
@@ -91,45 +89,39 @@ const PanicForm = ({
     );
   } else {
     return (
-      <Box component="form" onSubmit={handleSubmit}>
-        <FormControl
-          fullWidth
-          sx={{
-            my: 5,
-          }}
-        >
-          <Stack spacing={1}>
-            <TextField
-              name="panic_type"
-              placeholder="Panic Type"
-              value={formData.panic_type || ""}
-              onChange={handleChange}
-            />
+      <>
+        <Typography>Enter Panic Information</Typography>
+        <Box component="form" onSubmit={handleSubmit}>
+          <FormControl
+            fullWidth
+            sx={{
+              my: 5,
+            }}
+          >
+            <Stack spacing={1}>
+              <TextField
+                name="panic_type"
+                placeholder="Panic Type"
+                value={formData.panic_type || ""}
+                onChange={handleChange}
+              />
 
-            <TextField
-              name="details"
-              placeholder="Details"
-              multiline
-              rows={4}
-              value={formData.details || ""}
-              onChange={handleChange}
-            />
+              <TextField
+                name="details"
+                placeholder="Details"
+                multiline
+                rows={4}
+                value={formData.details || ""}
+                onChange={handleChange}
+              />
 
-            <Button variant="contained" type="submit">
-              Send
-            </Button>
-
-            <Button
-              component={RouterLink}
-              to="/home"
-              variant="contained"
-              color="secondary"
-            >
-              Home
-            </Button>
-          </Stack>
-        </FormControl>
-      </Box>
+              <Button variant="contained" type="submit">
+                Send
+              </Button>
+            </Stack>
+          </FormControl>
+        </Box>
+      </>
     );
   }
 };

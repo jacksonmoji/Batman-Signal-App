@@ -28,8 +28,9 @@ export const cancelPanicRequestFailure = (panic) => ({
   payload: { panic },
 });
 
-export const loadPanicHistoryInProgress = () => ({
+export const loadPanicHistoryInProgress = (status) => ({
   type: LOAD_PANIC_HISTORY_IN_PROGRESS,
+  payload: { status },
 });
 
 export const loadPanicHistorySuccess = (panics) => ({
