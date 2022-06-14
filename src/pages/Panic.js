@@ -1,8 +1,7 @@
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 
-import { styled } from "@mui/material/styles";
-import { Container, Button } from "@mui/material";
+import { styled, Container, Button } from "@mui/material";
 
 import PanicForm from "../components/panicForm";
 import Header from "../components/header";
@@ -17,7 +16,7 @@ const SectionStyle = styled("div")(({ theme }) => ({
   padding: theme.spacing(12, 0),
 }));
 
-const Panic = ({ user }) => {
+const Panic = () => {
   return (
     <Container maxWidth="sm" sx={{ textAlign: "center" }}>
       <SectionStyle>

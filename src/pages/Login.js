@@ -1,5 +1,4 @@
-import { styled } from "@mui/material/styles";
-import { Container, Typography } from "@mui/material";
+import { styled, Container, Typography } from "@mui/material";
 
 import LogInForm from "../components/loginForm";
 import Header from "../components/header";

@@ -1,7 +1,5 @@
 import { Link as RouterLink } from "react-router-dom";
-
-import { styled } from "@mui/material/styles";
-import { Typography, Container, Button, Stack } from "@mui/material";
+import { styled, Typography, Container, Button, Stack } from "@mui/material";
 
 import Header from "../components/header";
 
