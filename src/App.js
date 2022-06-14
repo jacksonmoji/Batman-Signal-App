@@ -42,18 +42,6 @@ function App() {
       <CssBaseline />
       <Router />
     </ThemeProvider>
-
-    // <Container component="main" maxWidth="sm"></Container>
-    /* <Box sx={{ marginTop: 50 }}>
-<Grid alignItems={"center"} container>
-  <Grid item xs>
-    <Typography component="h1" variant="h4">
-      Batman Signal
-    </Typography>
-  </Grid>
-</Grid>
-</Box>
-<PanicForm /> */
   );
 }
 
