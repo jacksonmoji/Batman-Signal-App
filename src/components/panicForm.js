@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import {
-  getPanicInformation,
-  getUser,
-  getPanicInProgress,
-} from "../redux/selectors";
+import { getPanicInformation, getPanicInProgress } from "../redux/selectors";
 import {
   TextField,
   FormControl,
@@ -13,23 +9,8 @@ import {
   Button,
   Stack,
 } from "@mui/material/";
-
-import { sendPanicRequest, cancelPanicRequest } from "../redux/api/panic";
-
-const formReducer = (state, event) => {
-  if (event.reset) {
-    return {
-      latitude: 0,
-      longitude: 0,
-      panic_type: "",
-      details: "",
-    };
-  }
-  return {
-    ...state,
-    [event.name]: event.value,
-  };
-};
+import Progress from "../components/loader";
+import { sendPanicRequest, cancelPanicRequest } from "../redux/apis/panic";
 
 const PanicForm = ({
   onSendRequestPressed,
@@ -37,18 +18,10 @@ const PanicForm = ({
   onCancelRequestPressed,
   panics,
 }) => {
-  const [formData, setFormData] = useReducer(formReducer, {
-    count: 100,
-  });
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
-
-  const handleChange = (event) => {
-    setFormData({
-      name: event.target.name,
-      value: event.target.value,
-    });
-  };
+  const [panicType, setPanicType] = useState("");
+  const [details, setDetails] = useState("");
 
   useEffect(() => {
     if (latitude === "" || longitude === "") {
@@ -57,34 +30,32 @@ const PanicForm = ({
         setLongitude(position.coords.longitude);
       });
     }
-  }, [latitude, longitude, panicInProgress]);
+  }, [latitude, longitude, panicType, details]);
 
   const handlePanicCancel = (event) => {
     event.preventDefault();
-    onCancelRequestPressed(panics.data.panic_id);
+    onCancelRequestPressed(panics.panic_id);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // setSubmitting(true);
-
-    onSendRequestPressed({ ...formData, latitude, longitude });
-
-    setTimeout(() => {
-      // setSubmitting(false);
-      setFormData({
-        reset: true,
-      });
-    }, 3000);
+    onSendRequestPressed({ panicType, details, latitude, longitude });
+    setLatitude("");
+    setLongitude("");
+    setPanicType("");
+    setDetails("");
   };
 
   if (panicInProgress) {
     return (
       <>
+        <Typography color="primary" variant="h6" gutterBottom>
+          Panic Signal Up
+        </Typography>
+        <Progress loading={panicInProgress} type="linear" />
         <Button onClick={handlePanicCancel} variant="contained" color="primary">
           Cancel Panic
         </Button>
-        Panic in progress...
       </>
     );
   } else {
@@ -102,8 +73,10 @@ const PanicForm = ({
               <TextField
                 name="panic_type"
                 placeholder="Panic Type"
-                value={formData.panic_type || ""}
-                onChange={handleChange}
+                value={panicType}
+                onChange={(e) => {
+                  setPanicType(e.target.value);
+                }}
               />
 
               <TextField
@@ -111,8 +84,10 @@ const PanicForm = ({
                 placeholder="Details"
                 multiline
                 rows={4}
-                value={formData.details || ""}
-                onChange={handleChange}
+                value={details}
+                onChange={(e) => {
+                  setDetails(e.target.value);
+                }}
               />
 
               <Button variant="contained" type="submit">
@@ -129,7 +104,6 @@ const PanicForm = ({
 const mapStateToProps = (state) => ({
   panics: getPanicInformation(state),
   panicInProgress: getPanicInProgress(state),
-  user: getUser(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
