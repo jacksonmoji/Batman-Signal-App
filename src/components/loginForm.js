@@ -2,12 +2,15 @@ import React, { useEffect, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { getUser } from "../redux/selectors";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { loginRequest } from "../redux/api/auth";
+import {
+  FormControl,
+  TextField,
+  Box,
+  Stack,
+  Button,
+  Typography,
+} from "@mui/material";
+import { loginRequest } from "../redux/apis/auth";
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -36,29 +39,26 @@ const LogInForm = ({ onLoginPressed, user }) => {
   };
 
   useEffect(() => {
-    if (user) {
-      console.log("user is logged in");
+    if (user && user.isAuthenticated) {
       navigate("/home", { replace: true });
     }
-    // place listener for user account and re-route to homepage if user loggedin
   }, [user, navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // setSubmitting(true);
 
     onLoginPressed({ ...formData });
 
-    setTimeout(() => {
-      // setSubmitting(false);
-      setFormData({
-        reset: true,
-      });
-    }, 3000);
+    setFormData({
+      reset: true,
+    });
   };
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
+      {user && !user.isAuthenticated ? (
+        <Typography color="primary"> {user.message} </Typography>
+      ) : null}
       <FormControl
         fullWidth
         sx={{
@@ -66,13 +66,18 @@ const LogInForm = ({ onLoginPressed, user }) => {
         }}
       >
         <Stack spacing={1}>
+          {user && user.errors ? (
+            <Typography color="primary"> {user.errors.email}</Typography>
+          ) : null}
           <TextField
             name="email"
             placeholder="Enter your email address"
             value={formData.email || ""}
             onChange={handleChange}
           />
-
+          {user && user.errors ? (
+            <Typography color="primary"> {user.errors.password}</Typography>
+          ) : null}
           <TextField
             name="password"
             placeholder="Enter password"
