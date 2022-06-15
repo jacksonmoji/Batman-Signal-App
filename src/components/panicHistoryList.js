@@ -12,7 +12,7 @@ import {
   tableCellClasses,
 } from "@mui/material";
 
-import Progress from "../components/loader";
+import Progress from "./Loader";
 
 import {
   getPanicHistory,
@@ -56,7 +56,7 @@ const PanicHistoryList = ({
   } else {
     return (
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} a dense table>
+        <Table sx={{ minWidth: 650 }} dense="true">
           <TableHead>
             <StyledTableRow>
               <StyledTableCell>Panic Type</StyledTableCell>
@@ -67,7 +67,7 @@ const PanicHistoryList = ({
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {panicHistory.map((row) => (
+            {panicHistory.data.map((row) => (
               <StyledTableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}

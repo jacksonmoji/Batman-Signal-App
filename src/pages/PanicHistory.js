@@ -2,8 +2,8 @@ import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Button, styled, Container, Typography } from "@mui/material";
 
-import PanicHistoryList from "../components/panicHistoryList";
-import Header from "../components/header";
+import PanicHistoryList from "../components/PanicHistoryList";
+import Header from "../components/Header";
 
 const SectionStyle = styled("div")(({ theme }) => ({
   margin: "auto",

@@ -6,10 +6,10 @@ export const authReducers = (state = {}, action) => {
 
   switch (type) {
     case LOGIN_SUCCESS:
-      return { ...state, loading: false, userInfo: payload };
+      return { ...state, userInfo: payload };
 
     case LOGIN_FAILURE:
-      return { ...state, loading: false, error: payload };
+      return { ...state, userInfo: payload };
 
     case LOGOUT:
       return { ...state, userInfo: null };

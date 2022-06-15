@@ -3,8 +3,8 @@ import React from "react";
 
 import { styled, Container, Button } from "@mui/material";
 
-import PanicForm from "../components/panicForm";
-import Header from "../components/header";
+import PanicForm from "../components/PanicForm";
+import Header from "../components/Header";
 
 const SectionStyle = styled("div")(({ theme }) => ({
   maxWidth: 300,

@@ -1,7 +1,7 @@
 import { styled, Container, Typography } from "@mui/material";
 
-import LogInForm from "../components/loginForm";
-import Header from "../components/header";
+import LogInForm from "../components/LoginForm";
+import Header from "../components/Header";
 
 const SectionStyle = styled("div")(({ theme }) => ({
   maxWidth: 300,

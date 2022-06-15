@@ -9,7 +9,7 @@ import {
   Button,
   Stack,
 } from "@mui/material/";
-import Progress from "../components/loader";
+import Progress from "./Loader";
 import { sendPanicRequest, cancelPanicRequest } from "../redux/apis/panic";
 
 const PanicForm = ({
