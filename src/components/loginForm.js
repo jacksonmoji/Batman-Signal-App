@@ -28,7 +28,8 @@ const formReducer = (state, event) => {
 const LogInForm = ({ onLoginPressed, user }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useReducer(formReducer, {
-    count: 100,
+    email: "",
+    password: "",
   });
 
   const handleChange = (event) => {
