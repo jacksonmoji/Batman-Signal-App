@@ -10,6 +10,8 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
+
 import { loginRequest } from "../redux/apis/auth";
 
 const formReducer = (state, event) => {
@@ -26,6 +28,8 @@ const formReducer = (state, event) => {
 };
 
 const LogInForm = ({ onLoginPressed, user }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const navigate = useNavigate();
   const [formData, setFormData] = useReducer(formReducer, {
     email: "",
@@ -41,9 +45,13 @@ const LogInForm = ({ onLoginPressed, user }) => {
 
   useEffect(() => {
     if (user && user.isAuthenticated) {
+      enqueueSnackbar(user.message, { variant: "success" });
       navigate("/home", { replace: true });
     }
-  }, [user, navigate]);
+    if (user && user.errors) {
+      enqueueSnackbar(user.message, { variant: "error" });
+    }
+  }, [user, enqueueSnackbar, navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -57,9 +65,6 @@ const LogInForm = ({ onLoginPressed, user }) => {
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      {user && !user.isAuthenticated ? (
-        <Typography color="primary"> {user.message} </Typography>
-      ) : null}
       <FormControl
         fullWidth
         sx={{

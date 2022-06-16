@@ -9,6 +9,8 @@ import {
   Button,
   Stack,
 } from "@mui/material/";
+import { useSnackbar } from "notistack";
+
 import Progress from "./Loader";
 import { sendPanicRequest, cancelPanicRequest } from "../redux/apis/panic";
 
@@ -33,6 +35,7 @@ const PanicForm = ({
   onCancelRequestPressed,
   panics,
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [formData, setFormData] = useReducer(formReducer, {
     latitude: "",
     longitude: "",
@@ -41,15 +44,25 @@ const PanicForm = ({
   });
 
   useEffect(() => {
+    if (panics.errors) {
+      enqueueSnackbar(panics.message, { variant: "error" });
+    }
+    if (panics && !panics.errors) {
+      enqueueSnackbar(panics.message, { variant: "success" });
+    }
+  }, [panics, enqueueSnackbar]);
+
+  useEffect(() => {
     if (formData.latitude === "" || formData.longitude === "") {
       navigator.geolocation.getCurrentPosition(function (position) {
+        const { latitude, longitude } = position.coords;
         setFormData({
           name: "longitude",
-          value: position.coords.longitude,
+          value: longitude,
         });
         setFormData({
           name: "latitude",
-          value: position.coords.latitude,
+          value: latitude,
         });
       });
     }
@@ -79,7 +92,7 @@ const PanicForm = ({
         <Typography color="primary" variant="h6" gutterBottom>
           Panic Signal Up
         </Typography>
-        <Progress loading={panicInProgress} type="linear" />
+        <Progress loading={panicInProgress} />
         <Button onClick={handlePanicCancel} variant="contained" color="primary">
           Cancel Panic
         </Button>
@@ -89,6 +102,14 @@ const PanicForm = ({
     return (
       <>
         <Typography>Enter Panic Information</Typography>
+        {panics && panics.errors ? (
+          <>
+            <Typography color="primary">
+              {" "}
+              Please allow location permissions to send your panic signal.
+            </Typography>
+          </>
+        ) : null}
         <Box component="form" onSubmit={handleSubmit}>
           <FormControl
             fullWidth

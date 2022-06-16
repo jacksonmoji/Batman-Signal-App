@@ -67,7 +67,7 @@ export const sendPanicRequest = (panic) => async (dispatch) => {
         message: data.message,
       })
     );
-    await dispatch(displayAlert("Panic request sent successfully"));
+    // await dispatch(displayAlert("Panic request sent successfully"));
   } catch (e) {
     dispatch(
       sendPanicRequestFailure({
@@ -88,7 +88,7 @@ export const cancelPanicRequest = (id) => async (dispatch) => {
     const { data } = await apiClient.post(`api/panics/cancels/`, params);
 
     await dispatch(cancelPanicRequestSuccess({ message: data.message }));
-    await dispatch(displayAlert("successfully cancelled panic"));
+    // await dispatch(displayAlert("successfully cancelled panic"));
   } catch (e) {
     dispatch(
       cancelPanicRequestFailure({

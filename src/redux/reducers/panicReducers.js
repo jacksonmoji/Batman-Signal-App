@@ -1,5 +1,6 @@
 import {
   SEND_PANIC_REQUEST_SUCCESS,
+  SEND_PANIC_REQUEST_FAILURE,
   CANCEL_PANIC_REQUEST_SUCCESS,
   LOAD_PANIC_HISTORY_IN_PROGRESS,
   LOAD_PANIC_HISTORY_SUCCESS,
@@ -23,6 +24,14 @@ export const panicReducers = (state = initialState, action) => {
         ...state,
         panic_information: panic,
         panic_in_progress: true,
+      };
+    }
+    case SEND_PANIC_REQUEST_FAILURE: {
+      const { panic } = payload;
+      return {
+        ...state,
+        panic_information: panic,
+        panic_in_progress: false,
       };
     }
     case CANCEL_PANIC_REQUEST_SUCCESS: {

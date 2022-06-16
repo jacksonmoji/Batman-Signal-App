@@ -1,5 +1,7 @@
 import Router from "./routes";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { SnackbarProvider } from "notistack";
+
 import CssBaseline from "@mui/material/CssBaseline";
 
 const theme = createTheme({
@@ -39,8 +41,10 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router />
+      <SnackbarProvider maxSnack={3}>
+        <CssBaseline />
+        <Router />
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }
