@@ -1,18 +1,24 @@
 /* eslint-disable default-param-last */
 import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from "../types/auth";
 
-export const authReducers = (state = {}, action) => {
+const initialState = {
+  token: localStorage.getItem("token"),
+  isAuthenticated: false,
+};
+
+export const authReducers = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
     case LOGIN_SUCCESS:
-      return { ...state, userInfo: payload };
+      localStorage.setItem("token", JSON.stringify(payload.data));
+      return { isAuthenticated: true };
 
     case LOGIN_FAILURE:
-      return { ...state, userInfo: payload };
+      return { isAuthenticated: false };
 
     case LOGOUT:
-      return { ...state, userInfo: null };
+      return { token: null, isAuthenticated: false };
 
     default:
       return state;

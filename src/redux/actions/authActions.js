@@ -1,15 +1,15 @@
 import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from "../types/auth";
 
-export const loginSuccess = (user) => ({
+export const loginSuccess = (data) => ({
   type: LOGIN_SUCCESS,
-  payload: { ...user },
+  payload: { data },
 });
 
-export const loginFailure = (user) => ({
+export const loginFailure = (data) => ({
   type: LOGIN_FAILURE,
-  payload: { ...user },
+  payload: { data },
 });
 
-export const logout = (user) => ({
+export const logout = () => ({
   type: LOGOUT,
 });

@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
-import { getUser } from "../redux/selectors";
-import { connect } from "react-redux";
+import { getAuthenticationStatus } from "../redux/selectors";
+import Notification from "../components/Notification";
 
 const HeaderStyle = styled("header")(({ theme }) => ({
   top: 0,
@@ -22,21 +23,24 @@ const AuthenticatedLayouts = ({ user }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login", { replace: true });
-    }
+    // if (!user) {
+    //   navigate("/login", { replace: true });
+    // } else {
+    //   navigate("/home", { replace: true });
+    // }
   }, [user, navigate]);
 
   return (
     <>
       <HeaderStyle>Batman</HeaderStyle>
+      <Notification />
       <Outlet />
     </>
   );
 };
 
 const mapStateToProps = (state) => ({
-  user: getUser(state),
+  user: getAuthenticationStatus(state),
 });
 
 export default connect(mapStateToProps)(AuthenticatedLayouts);

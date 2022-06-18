@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from "react";
 import { connect } from "react-redux";
-import { getPanicInformation, getPanicInProgress } from "../redux/selectors";
+import { getPanicInformation } from "../redux/selectors";
 import {
   TextField,
   FormControl,
@@ -9,10 +9,9 @@ import {
   Button,
   Stack,
 } from "@mui/material/";
-import { useSnackbar } from "notistack";
 
 import Progress from "./Loader";
-import { sendPanicRequest, cancelPanicRequest } from "../redux/apis/panic";
+import { sendPanicRequest, sendCancelPanicRequest } from "../redux/apis/panic";
 
 const formReducer = (state, event) => {
   if (event.reset) {
@@ -29,28 +28,13 @@ const formReducer = (state, event) => {
   };
 };
 
-const PanicForm = ({
-  onSendRequestPressed,
-  panicInProgress,
-  onCancelRequestPressed,
-  panics,
-}) => {
-  const { enqueueSnackbar } = useSnackbar();
+const PanicForm = ({ onSendRequestPressed, onCancelRequestPressed, panic }) => {
   const [formData, setFormData] = useReducer(formReducer, {
     latitude: "",
     longitude: "",
     panic_type: "",
     details: "",
   });
-
-  useEffect(() => {
-    if (panics.errors) {
-      enqueueSnackbar(panics.message, { variant: "error" });
-    }
-    if (panics && !panics.errors) {
-      enqueueSnackbar(panics.message, { variant: "success" });
-    }
-  }, [panics, enqueueSnackbar]);
 
   useEffect(() => {
     if (formData.latitude === "" || formData.longitude === "") {
@@ -66,11 +50,11 @@ const PanicForm = ({
         });
       });
     }
-  }, [formData]);
+  }, [formData.latitude, formData.longitude]);
 
   const handlePanicCancel = (event) => {
     event.preventDefault();
-    onCancelRequestPressed(panics.panic_id);
+    onCancelRequestPressed(panic.panicItem.id);
   };
 
   const handleChange = (event) => {
@@ -86,13 +70,13 @@ const PanicForm = ({
     setFormData({ reset: true });
   };
 
-  if (panicInProgress) {
+  if (panic.active) {
     return (
       <>
         <Typography color="primary" variant="h6" gutterBottom>
           Panic Signal Up
         </Typography>
-        <Progress loading={panicInProgress} />
+        <Progress loading={panic.active} />
         <Button onClick={handlePanicCancel} variant="contained" color="primary">
           Cancel Panic
         </Button>
@@ -102,10 +86,9 @@ const PanicForm = ({
     return (
       <>
         <Typography>Enter Panic Information</Typography>
-        {panics && panics.errors ? (
+        {panic.errors ? (
           <>
             <Typography color="primary">
-              {" "}
               Please allow location permissions to send your panic signal.
             </Typography>
           </>
@@ -146,13 +129,12 @@ const PanicForm = ({
 };
 
 const mapStateToProps = (state) => ({
-  panics: getPanicInformation(state),
-  panicInProgress: getPanicInProgress(state),
+  panic: getPanicInformation(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onSendRequestPressed: (data) => dispatch(sendPanicRequest(data)),
-  onCancelRequestPressed: (id) => dispatch(cancelPanicRequest(id)),
+  onCancelRequestPressed: (id) => dispatch(sendCancelPanicRequest(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanicForm);

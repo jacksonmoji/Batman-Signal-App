@@ -1,7 +1,6 @@
-import React, { useEffect, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useReducer } from "react";
 import { connect } from "react-redux";
-import { getUser } from "../redux/selectors";
+import { getAuthenticationStatus } from "../redux/selectors";
 import {
   FormControl,
   TextField,
@@ -10,7 +9,6 @@ import {
   Button,
   Typography,
 } from "@mui/material";
-import { useSnackbar } from "notistack";
 
 import { loginRequest } from "../redux/apis/auth";
 
@@ -28,9 +26,6 @@ const formReducer = (state, event) => {
 };
 
 const LogInForm = ({ onLoginPressed, user }) => {
-  const { enqueueSnackbar } = useSnackbar();
-
-  const navigate = useNavigate();
   const [formData, setFormData] = useReducer(formReducer, {
     email: "",
     password: "",
@@ -42,16 +37,6 @@ const LogInForm = ({ onLoginPressed, user }) => {
       value: event.target.value,
     });
   };
-
-  useEffect(() => {
-    if (user && user.isAuthenticated) {
-      enqueueSnackbar(user.message, { variant: "success" });
-      navigate("/home", { replace: true });
-    }
-    if (user && user.errors) {
-      enqueueSnackbar(user.message, { variant: "error" });
-    }
-  }, [user, enqueueSnackbar, navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -86,6 +71,7 @@ const LogInForm = ({ onLoginPressed, user }) => {
           ) : null}
           <TextField
             name="password"
+            type="password"
             placeholder="Enter password"
             value={formData.password || ""}
             onChange={handleChange}
@@ -101,7 +87,7 @@ const LogInForm = ({ onLoginPressed, user }) => {
 };
 
 const mapStateToProps = (state) => ({
-  user: getUser(state),
+  user: getAuthenticationStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

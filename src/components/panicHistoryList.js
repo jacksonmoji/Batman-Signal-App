@@ -14,11 +14,8 @@ import {
 
 import Progress from "./Loader";
 
-import {
-  getPanicHistory,
-  getPanicHistoryLoadingStatus,
-} from "../redux/selectors";
-import { loadPanicHistory } from "../redux/apis/panic";
+import { getPanicHistory, loading } from "../redux/selectors";
+import { sendLoadPanicHistoryRequest } from "../redux/apis/panic";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -51,7 +48,7 @@ const PanicHistoryList = ({
 
   if (panicHistoryLoading) {
     return <Progress loading={panicHistoryLoading} type="linear" />;
-  } else if (panicHistory.length < 1) {
+  } else if (!panicHistory) {
     return <div>No history available</div>;
   } else {
     return (
@@ -67,7 +64,7 @@ const PanicHistoryList = ({
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {panicHistory.data.map((row) => (
+            {panicHistory.map((row) => (
               <StyledTableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -93,12 +90,12 @@ const PanicHistoryList = ({
 const mapStateToProps = (state) => {
   return {
     panicHistory: getPanicHistory(state),
-    panicHistoryLoading: getPanicHistoryLoadingStatus(state),
+    panicHistoryLoading: loading(state),
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  startLoadPanicHistory: () => dispatch(loadPanicHistory()),
+  startLoadPanicHistory: () => dispatch(sendLoadPanicHistoryRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanicHistoryList);

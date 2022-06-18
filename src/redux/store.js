@@ -6,9 +6,16 @@ import {
 import thunk from "redux-thunk";
 import { panicReducers } from "./reducers/panicReducers";
 import { authReducers } from "./reducers/authReducers";
+import { loadingReducers } from "./reducers/loadingReducers";
+import { notificationReducers } from "./reducers/notificationReducers";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-const reducers = { panicReducers, authReducers };
+const reducers = {
+  panicReducers,
+  authReducers,
+  notificationReducers,
+  loadingReducers,
+};
 
 const rootReducer = combineReducers(reducers);
 

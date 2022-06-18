@@ -3,12 +3,15 @@ import { apiClient } from "./apiConfig";
 import {
   sendPanicRequestSuccess,
   sendPanicRequestFailure,
-  cancelPanicRequestSuccess,
-  cancelPanicRequestFailure,
-  loadPanicHistoryInProgress,
-  loadPanicHistorySuccess,
-  loadPanicHistoryFailure,
+  cancelPanicRequest,
+  loadPanicHistory,
 } from "../actions/panicActions";
+import {
+  successNotification,
+  failureNotification,
+} from "../actions/notificationActions";
+
+import { beginLoading, endLoading } from "../actions/loadingActions";
 
 const csrf = () => apiClient.get("sanctum/csrf-cookie");
 
@@ -19,36 +22,26 @@ const getBarrierConfig = () => {
   apiClient.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
 };
 
-export const loadPanicHistory = () => async (dispatch) => {
+export const sendLoadPanicHistoryRequest = () => async (dispatch) => {
   try {
+    dispatch(beginLoading());
+
     await csrf();
     getBarrierConfig();
 
-    dispatch(loadPanicHistoryInProgress(true));
-
     const { data } = await apiClient.get(`api/panics/history`);
-
-    await dispatch(
-      loadPanicHistorySuccess({
-        message: data.message,
-        data: data.data.panics,
-      })
-    );
-
-    await dispatch(loadPanicHistoryInProgress(false));
+    await dispatch(endLoading());
+    await dispatch(loadPanicHistory(data.data.panics));
   } catch (e) {
-    dispatch(
-      loadPanicHistoryFailure({
-        message: e.response.data.message,
-        errors: e.response.data.data,
-      })
-    );
-    dispatch(displayAlert(e));
+    console.log(e);
+    await dispatch(endLoading());
+    await dispatch(failureNotification(e.response.data.message));
   }
 };
 
 export const sendPanicRequest = (panic) => async (dispatch) => {
   try {
+    console.log(panic);
     const params = {
       longitude: panic.longitude.toString(), //string (required)
       latitude: panic.latitude.toString(), //string (required)
@@ -61,44 +54,26 @@ export const sendPanicRequest = (panic) => async (dispatch) => {
 
     const { data } = await apiClient.post(`api/panics/sends`, params);
 
-    await dispatch(
-      sendPanicRequestSuccess({
-        panic_id: data.data.panic_id,
-        message: data.message,
-      })
-    );
-    // await dispatch(displayAlert("Panic request sent successfully"));
+    dispatch(sendPanicRequestSuccess(data.data.panic_id));
+    dispatch(successNotification(data.message));
   } catch (e) {
-    dispatch(
-      sendPanicRequestFailure({
-        message: e.response.data.message,
-        errors: e.response.data.data,
-      })
-    );
+    console.log(e);
+    dispatch(sendPanicRequestFailure(e.response.data.data));
+    dispatch(failureNotification(e.response.data.message));
   }
 };
 
-export const cancelPanicRequest = (id) => async (dispatch) => {
+export const sendCancelPanicRequest = (id) => async (dispatch) => {
   try {
     const params = { panic_id: id };
-    console.log(params);
     await csrf();
     getBarrierConfig();
 
     const { data } = await apiClient.post(`api/panics/cancels/`, params);
 
-    await dispatch(cancelPanicRequestSuccess({ message: data.message }));
-    // await dispatch(displayAlert("successfully cancelled panic"));
+    await dispatch(cancelPanicRequest());
+    await dispatch(successNotification(data.message));
   } catch (e) {
-    dispatch(
-      cancelPanicRequestFailure({
-        message: e.response.data.message,
-        errors: e.response.data.data,
-      })
-    );
+    dispatch(failureNotification(e.response.data.message));
   }
-};
-
-export const displayAlert = (text) => () => {
-  alert(text);
 };

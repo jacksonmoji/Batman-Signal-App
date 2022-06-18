@@ -1,17 +1,26 @@
 import {
   SEND_PANIC_REQUEST_SUCCESS,
   SEND_PANIC_REQUEST_FAILURE,
-  CANCEL_PANIC_REQUEST_SUCCESS,
-  LOAD_PANIC_HISTORY_IN_PROGRESS,
-  LOAD_PANIC_HISTORY_SUCCESS,
-  LOAD_PANIC_HISTORY_FAILURE,
+  CANCEL_PANIC_REQUEST,
+  LOAD_PANIC_HISTORY,
 } from "../types/panic";
 
 const initialState = {
-  panic_history: [],
-  panic_information: {},
-  panic_in_progress: false,
-  panic_history_loading: false,
+  panicList: [],
+  panicItem: {
+    id: "",
+    type: "",
+    details: "",
+    createdAt: "",
+    updatedAt: "",
+    user: {
+      id: "",
+      name: "",
+      email: "",
+    },
+  },
+  active: false,
+  errors: null,
 };
 
 export const panicReducers = (state = initialState, action) => {
@@ -21,45 +30,44 @@ export const panicReducers = (state = initialState, action) => {
     case SEND_PANIC_REQUEST_SUCCESS: {
       const { panic } = payload;
       return {
-        ...state,
-        panic_information: panic,
-        panic_in_progress: true,
+        panicItem: {
+          id: panic,
+        },
+        active: true,
       };
     }
     case SEND_PANIC_REQUEST_FAILURE: {
       const { panic } = payload;
       return {
-        ...state,
-        panic_information: panic,
-        panic_in_progress: false,
+        errors: panic,
       };
     }
-    case CANCEL_PANIC_REQUEST_SUCCESS: {
-      const { panic } = payload;
+    case CANCEL_PANIC_REQUEST: {
       return {
-        ...state,
-        panic_information: panic,
-        panic_in_progress: false,
+        panicItem: {
+          id: "",
+          type: "",
+          details: "",
+          createdAt: "",
+          updatedAt: "",
+          user: {
+            id: "",
+            name: "",
+            email: "",
+          },
+        },
+        active: false,
       };
     }
-    case LOAD_PANIC_HISTORY_SUCCESS: {
+
+    case LOAD_PANIC_HISTORY: {
       const { panics } = payload;
       return {
         ...state,
-        panic_history: panics,
+        panicList: panics,
       };
     }
-    case LOAD_PANIC_HISTORY_IN_PROGRESS: {
-      const { status } = payload;
-      return {
-        ...state,
-        panic_history_loading: status,
-      };
-    }
-    case LOAD_PANIC_HISTORY_FAILURE:
-      return {
-        ...state,
-      };
+
     default:
       return state;
   }

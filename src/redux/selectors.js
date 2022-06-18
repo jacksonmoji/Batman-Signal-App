@@ -1,8 +1,7 @@
-export const getPanicHistory = (state) => state.panicReducers.panic_history;
-export const getPanicHistoryLoadingStatus = (state) =>
-  state.panicReducers.panic_history_loading;
-export const getUser = (state) => state.authReducers.userInfo;
-export const getPanicInformation = (state) =>
-  state.panicReducers.panic_information;
-export const getPanicInProgress = (state) =>
-  state.panicReducers.panic_in_progress;
+export const getPanicHistory = (state) => state.panicReducers.panicList;
+export const loading = (state) => state.loadingReducers.loading;
+export const getAuthenticationStatus = (state) =>
+  state.authReducers.isAuthenticated;
+
+export const getNotification = (state) => state.notificationReducers;
+export const getPanicInformation = (state) => state.panicReducers;
