@@ -1,6 +1,6 @@
 import { apiClient } from "./apiConfig";
-
-import { loginSuccess, loginFailure } from "../actions/authActions";
+// import { useNavigate } from "react-router-dom";
+import { loginSuccess, loginFailure, logout } from "../actions/authActions";
 import {
   successNotification,
   failureNotification,
@@ -29,3 +29,13 @@ export const loginRequest =
       dispatch(failureNotification(e.response.data.message));
     }
   };
+
+export const logoutRequest = () => (dispatch) => {
+  // const navigate = useNavigate();
+  try {
+    dispatch(logout());
+    // navigate("/login");
+  } catch (e) {
+    dispatch(failureNotification("logout failed"));
+  }
+};

@@ -33,7 +33,6 @@ export const sendLoadPanicHistoryRequest = () => async (dispatch) => {
     await dispatch(endLoading());
     await dispatch(loadPanicHistory(data.data.panics));
   } catch (e) {
-    console.log(e);
     await dispatch(endLoading());
     await dispatch(failureNotification(e.response.data.message));
   }
@@ -41,7 +40,6 @@ export const sendLoadPanicHistoryRequest = () => async (dispatch) => {
 
 export const sendPanicRequest = (panic) => async (dispatch) => {
   try {
-    console.log(panic);
     const params = {
       longitude: panic.longitude.toString(), //string (required)
       latitude: panic.latitude.toString(), //string (required)
@@ -57,7 +55,6 @@ export const sendPanicRequest = (panic) => async (dispatch) => {
     dispatch(sendPanicRequestSuccess(data.data.panic_id));
     dispatch(successNotification(data.message));
   } catch (e) {
-    console.log(e);
     dispatch(sendPanicRequestFailure(e.response.data.data));
     dispatch(failureNotification(e.response.data.message));
   }

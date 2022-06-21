@@ -1,10 +1,7 @@
-import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 
-import { getAuthenticationStatus } from "../redux/selectors";
 import Notification from "../components/Notification";
 
 const HeaderStyle = styled("header")(({ theme }) => ({
@@ -19,16 +16,16 @@ const HeaderStyle = styled("header")(({ theme }) => ({
   },
 }));
 
-const AuthenticatedLayouts = ({ user }) => {
+const AuthenticatedLayouts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // if (!user) {
-    //   navigate("/login", { replace: true });
-    // } else {
-    //   navigate("/home", { replace: true });
-    // }
-  }, [user, navigate]);
+    let token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+    return;
+  }, [navigate]);
 
   return (
     <>
@@ -39,8 +36,4 @@ const AuthenticatedLayouts = ({ user }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  user: getAuthenticationStatus(state),
-});
-
-export default connect(mapStateToProps)(AuthenticatedLayouts);
+export default AuthenticatedLayouts;

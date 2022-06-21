@@ -1,6 +1,8 @@
+import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { styled, Typography, Container, Button, Stack } from "@mui/material";
 
+import Logout from "../components/Logout";
 import Header from "../components/Header";
 
 const SectionStyle = styled("div")(({ theme }) => ({
@@ -37,6 +39,7 @@ const Home = () => {
               Panic History
             </Typography>
           </Button>
+          <Logout />
         </Stack>
       </SectionStyle>
     </Container>

@@ -12,12 +12,13 @@ export const authReducers = (state = initialState, action) => {
   switch (type) {
     case LOGIN_SUCCESS:
       localStorage.setItem("token", JSON.stringify(payload.data));
-      return { isAuthenticated: true };
+      return { ...state, isAuthenticated: true };
 
     case LOGIN_FAILURE:
       return { isAuthenticated: false };
 
     case LOGOUT:
+      localStorage.removeItem("token");
       return { token: null, isAuthenticated: false };
 
     default:

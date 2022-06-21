@@ -1,4 +1,5 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { getAuthenticationStatus } from "../redux/selectors";
 import {
@@ -26,6 +27,7 @@ const formReducer = (state, event) => {
 };
 
 const LogInForm = ({ onLoginPressed, user }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useReducer(formReducer, {
     email: "",
     password: "",
@@ -43,10 +45,20 @@ const LogInForm = ({ onLoginPressed, user }) => {
 
     onLoginPressed({ ...formData });
 
+    navigate("/home");
+
     setFormData({
       reset: true,
     });
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/home");
+    }
+    return;
+  }, [navigate]);
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
