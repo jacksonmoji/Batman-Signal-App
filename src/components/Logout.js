@@ -7,7 +7,7 @@ const Logout = ({ onLogoutPressed }) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     onLogoutPressed();
-    navigate("/");
+    navigate("/login");
   };
 
   return (

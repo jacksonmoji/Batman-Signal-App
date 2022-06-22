@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { connect } from "react-redux";
 import { getPanicInformation } from "../redux/selectors";
 import {

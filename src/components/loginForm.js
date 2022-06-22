@@ -1,5 +1,5 @@
-import React, { useReducer, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useReducer } from "react";
+import { Navigate } from "react-router-dom";
 import { connect } from "react-redux";
 import { getAuthenticationStatus } from "../redux/selectors";
 import {
@@ -26,8 +26,7 @@ const formReducer = (state, event) => {
   };
 };
 
-const LogInForm = ({ onLoginPressed, user }) => {
-  const navigate = useNavigate();
+const LogInForm = ({ onLoginPressed, user, isLoading }) => {
   const [formData, setFormData] = useReducer(formReducer, {
     email: "",
     password: "",
@@ -42,23 +41,12 @@ const LogInForm = ({ onLoginPressed, user }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     onLoginPressed({ ...formData });
-
-    navigate("/home");
-
-    setFormData({
-      reset: true,
-    });
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      navigate("/home");
-    }
-    return;
-  }, [navigate]);
+  if (user.token) {
+    return <Navigate to={"/home"} replace />;
+  }
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
@@ -69,18 +57,18 @@ const LogInForm = ({ onLoginPressed, user }) => {
         }}
       >
         <Stack spacing={1}>
-          {user && user.errors ? (
+          {user.errors && (
             <Typography color="primary"> {user.errors.email}</Typography>
-          ) : null}
+          )}
           <TextField
             name="email"
             placeholder="Enter your email address"
             value={formData.email || ""}
             onChange={handleChange}
           />
-          {user && user.errors ? (
+          {user.errors && (
             <Typography color="primary"> {user.errors.password}</Typography>
-          ) : null}
+          )}
           <TextField
             name="password"
             type="password"
