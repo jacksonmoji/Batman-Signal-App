@@ -1,4 +1,3 @@
-import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { styled, Typography, Container, Button, Stack } from "@mui/material";
 
@@ -25,7 +24,7 @@ const Home = () => {
             <Typography
               sx={{ textDecoration: "none" }}
               component={RouterLink}
-              to="/home/panic"
+              to="/panic"
             >
               Panic
             </Typography>
@@ -34,7 +33,7 @@ const Home = () => {
             <Typography
               sx={{ textDecoration: "none" }}
               component={RouterLink}
-              to="/home/history"
+              to="/history"
             >
               Panic History
             </Typography>
