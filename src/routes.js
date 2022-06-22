@@ -14,11 +14,17 @@ const Router = () => {
     {
       path: "/home",
       element: <AuthenticatedLayouts />,
-      children: [
-        { path: "", element: <Home /> },
-        { path: "/home/panic", element: <Panic /> },
-        { path: "/home/history", element: <PanicHistory /> },
-      ],
+      children: [{ path: "", element: <Home /> }],
+    },
+    {
+      path: "/panic",
+      element: <AuthenticatedLayouts />,
+      children: [{ path: "", element: <Panic /> }],
+    },
+    {
+      path: "/history",
+      element: <AuthenticatedLayouts />,
+      children: [{ path: "", element: <PanicHistory /> }],
     },
     {
       path: "/",
