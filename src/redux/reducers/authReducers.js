@@ -2,8 +2,8 @@
 import { LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from "../types/auth";
 
 const initialState = {
-  token: localStorage.getItem("token"),
-  isAuthenticated: false,
+  token: localStorage.getItem("token") || null,
+  errors: null,
 };
 
 export const authReducers = (state = initialState, action) => {
@@ -12,14 +12,14 @@ export const authReducers = (state = initialState, action) => {
   switch (type) {
     case LOGIN_SUCCESS:
       localStorage.setItem("token", JSON.stringify(payload.data));
-      return { ...state, isAuthenticated: true };
+      return { ...state };
 
     case LOGIN_FAILURE:
-      return { isAuthenticated: false };
+      return { ...state, errors: payload.data };
 
     case LOGOUT:
       localStorage.removeItem("token");
-      return { token: null, isAuthenticated: false };
+      return { token: null, errors: null };
 
     default:
       return state;

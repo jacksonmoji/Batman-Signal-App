@@ -31,10 +31,10 @@ export const sendLoadPanicHistoryRequest = () => async (dispatch) => {
 
     const { data } = await apiClient.get(`api/panics/history`);
     await dispatch(endLoading());
-    await dispatch(loadPanicHistory(data.data.panics));
+    dispatch(loadPanicHistory(data.data.panics));
   } catch (e) {
     await dispatch(endLoading());
-    await dispatch(failureNotification(e.response.data.message));
+    dispatch(failureNotification(e.response.data.message));
   }
 };
 

@@ -1,5 +1,4 @@
 import { Link as RouterLink } from "react-router-dom";
-import React from "react";
 
 import { styled, Container, Button } from "@mui/material";
 

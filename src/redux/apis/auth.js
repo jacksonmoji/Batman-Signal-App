@@ -1,5 +1,4 @@
 import { apiClient } from "./apiConfig";
-// import { useNavigate } from "react-router-dom";
 import { loginSuccess, loginFailure, logout } from "../actions/authActions";
 import {
   successNotification,
@@ -21,9 +20,9 @@ export const loginRequest =
 
       const { data } = await apiClient.post(`api/login`, params);
 
-      await dispatch(loginSuccess(data.data.api_access_token));
-
-      await dispatch(successNotification(data.message));
+      dispatch(loginSuccess(data.data.api_access_token));
+      dispatch(successNotification(data.message));
+      window.location.reload();
     } catch (e) {
       dispatch(loginFailure(e.response.data.data));
       dispatch(failureNotification(e.response.data.message));
@@ -31,10 +30,8 @@ export const loginRequest =
   };
 
 export const logoutRequest = () => (dispatch) => {
-  // const navigate = useNavigate();
   try {
     dispatch(logout());
-    // navigate("/login");
   } catch (e) {
     dispatch(failureNotification("logout failed"));
   }
